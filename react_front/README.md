@@ -1,70 +1,132 @@
-# Getting Started with Create React App
+# 한국어 데이터 학습, 웹 서비스 준비
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+생성 일시: 2022년 9월 3일 오전 12:49
+조 이름: Mad Scientist
+주차: 8주차
+팀: Creative Lab
+활동 날짜: 2022년 9월 4일
 
-## Available Scripts
+# 프론트 엔드 (리액트)
 
-In the project directory, you can run:
+### 환경구축 / 실행방법
 
-### `npm start`
+<aside>
+💡 프론트 엔드 개발에는 구름 ide를 사용했고, react를 기반으로 페이지를 만들었다. 구름 ide의 장점은 서버를 무료로 호스팅해주는 서비스를 제공한다는 점이다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+</aside>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. 먼저 구름 ide에 회원가입을 하고, 새 컨테이너를 만들고 실행한다. 이때 ‘항상 켜두기’ 옵션으로 실행한다. ([[구름IDE/REACT] 구름IDE 환경으로 리액트 시작하기#1 (tistory.com)](https://ddangz.tistory.com/6)를 참고!)
 
-### `npm test`
+1. “npm install -g create-react-app” 명령어를 통해 create-react-app 모듈을 설치한다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. “npm install -g n”, “n stable” 명령어를 통해 node.js를 업데이트 한다. ([How to Update Node and NPM to the Latest Version (freecodecamp.org)](https://www.freecodecamp.org/news/how-to-update-node-and-npm-to-the-latest-version/)를 참고)
 
-### `npm run build`
+1. “create-react-app react_front” 를 입력해 ./react_front 폴더에 react 앱을 생성한다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. react_front/src에서 App.js를 아래와 같이 고친다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```jsx
+import React, { Component } from 'react';
+import mad from './Mad.svg';
+import './App.css';
+import RecordView from './RecordView.js'
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+class App extends Component {
+  render() {
+    return (
+		<div>
+			<h1>Mad Scientist</h1> <img src={mad} className="App-logo" alt="logo" />
+			<h2>Speech Emotion Recognition</h2>
+			<RecordView></RecordView>
+		</div>
+    );
+  }
+}
 
-### `npm run eject`
+export default App;
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. react_front/src에 RecordView.js를 생성해, 아래와 같이 작성한다.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```jsx
+import { useReactMediaRecorder } from "react-media-recorder";
+import React, { useState } from "react";
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+const RecordView = () => {
+  const {
+    status,
+    startRecording,
+    stopRecording,
+    mediaBlobUrl,
+    clearBlobUrl
+  } = useReactMediaRecorder({ audio: true });
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  const [url, setUrl] = useState(mediaBlobUrl);
+  const resetRecording = () => {
+    console.log("clicked");
+    // setUrl(clearBlobUrl);
+    clearBlobUrl();
+  };
+	
+  const sendtoFlask = () => {
+	  console.log("sent to Flask")
+  }
 
-## Learn More
+  return (
+    <div>
+      <p>{status}</p>
+      <button onClick={startRecording}>Start Recording</button>
+      <button onClick={stopRecording}>Stop Recording</button>
+		  <h2></h2>
+      <audio src={mediaBlobUrl} controls />
+		  <h2></h2>
+      <button onClick={clearBlobUrl}>Reset Recording</button>
+	  <h2></h2>
+	  <button onClick={sendtoFlask}>Send to Flask</button>
+    </div>
+  );
+};
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+export default RecordView;
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. 아래 사진을 다운로드받아 .svg 형식으로 변환한 이후, react_front/Mad.svg로 업로드 한다. (구글에 png to svg 검색)
+    
+    ![Untitled](%E1%84%92%E1%85%A1%E1%86%AB%E1%84%80%E1%85%AE%E1%86%A8%E1%84%8B%E1%85%A5%20%E1%84%83%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%90%E1%85%A5%20%E1%84%92%E1%85%A1%E1%86%A8%E1%84%89%E1%85%B3%E1%86%B8,%20%E1%84%8B%E1%85%B0%E1%86%B8%20%E1%84%89%E1%85%A5%E1%84%87%E1%85%B5%E1%84%89%E1%85%B3%20%E1%84%8C%E1%85%AE%E1%86%AB%E1%84%87%E1%85%B5%2075bf5720f81d4ab0b22398dc7c379189/Untitled.png)
+    
 
-### Code Splitting
+1. “npm install react-media-recorder”를 통해 음성녹음 패키지를 설치한다.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. “cd react_front”, “npm run start”를 통해 서버를 실행한다.
 
-### Analyzing the Bundle Size
+1. 구름 ide의 실행화면에서 “프로젝트” > “실행 URL과 포트”의 url을 통해 외부에서도 웹 페이지에 접속할 수 있다.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+** github 저장소에서 clone 하게 되면 코드들을 직접 고칠 필요 없이 개발 환경 세팅에 관련된 명령어들만 입력해주면 된다. 저장소 위치: [ji-nuuu/speech_emotion_recognition: deep daiv 1st mad scientist (github.com)](https://github.com/ji-nuuu/speech_emotion_recognition)
 
-### Making a Progressive Web App
+### 프론트 작동방식
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- 음성녹음을 프론트 서버에 저장하는 것 까지를 구현했다. 이후 계획은 백엔드 서버와 연결해 감정분석 결과를 페이지에 보여주는 것이다. 계획은 다음과 같다.
+- “send to flask” 버튼을 누르면 flask로 구현한 백엔드 서버에 음성파일을 .wav 형식으로 전송한다. 백엔드 서버에서는 저장된 모델을 통해 감정분석을 하고, 그 결과를 프론트 서버로 다시 전송한다. 프론트 서버는 감정 데이터를 받아서 웹 페이지에 보여준다.
+- 백 엔드와 프론트 엔드는 http의 ‘post’ 메서드를 통해 통신하도록 할 계획이다. ([GET방식 과 POST방식 :: 개발자로 홀로 서기 (tistory.com)](https://mommoo.tistory.com/60), [React(42) 리액트 훅 - POST 방식으로 요청 보내기 (tistory.com)](https://devbirdfeet.tistory.com/131))
 
-### Advanced Configuration
+![Untitled](%E1%84%92%E1%85%A1%E1%86%AB%E1%84%80%E1%85%AE%E1%86%A8%E1%84%8B%E1%85%A5%20%E1%84%83%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%90%E1%85%A5%20%E1%84%92%E1%85%A1%E1%86%A8%E1%84%89%E1%85%B3%E1%86%B8,%20%E1%84%8B%E1%85%B0%E1%86%B8%20%E1%84%89%E1%85%A5%E1%84%87%E1%85%B5%E1%84%89%E1%85%B3%20%E1%84%8C%E1%85%AE%E1%86%AB%E1%84%87%E1%85%B5%2075bf5720f81d4ab0b22398dc7c379189/Untitled%201.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+(09.03 기준) 
 
-### Deployment
+### 참고
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. 구름 ide에서 리액트 실행하는 방법: 
+    
+    [[구름IDE/REACT] 구름IDE 환경으로 리액트 시작하기#1 (tistory.com)](https://ddangz.tistory.com/6)
+    
+     [구름IDE 리액트 항상켜두기 / 리액트 백그라운드 실행 가이드(2) (tistory.com)](https://hellcoding.tistory.com/entry/%EA%B5%AC%EB%A6%84ide-%EB%A6%AC%EC%95%A1%ED%8A%B8-%ED%95%AD%EC%83%81%EC%BC%9C%EB%91%90%EA%B8%B02)
+    
+    [How to Update Node and NPM to the Latest Version (freecodecamp.org)](https://www.freecodecamp.org/news/how-to-update-node-and-npm-to-the-latest-version/)
+    
+2. 리액트의 기본에 관한 재생목록: 
+    
+    [React 2022 개정판 - YouTube](https://www.youtube.com/playlist?list=PLuHgQVnccGMCOGstdDZvH41x0Vtvwyxu7)
+    
+3. 리액트 음성녹음 코드
+    
+     [busy-danilo-y74b09 - CodeSandbox](https://codesandbox.io/s/busy-danilo-y74b09)
